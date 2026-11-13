@@ -44,9 +44,12 @@ details.opt .chips,details.opt .xq{margin-top:12px}
 .prize{background:#FFF6EF;border:1px solid #FFD9BF;border-radius:14px;padding:14px 16px;font-weight:600;max-width:520px}
 .bizalert{background:var(--navy);color:#fff;border-radius:14px;padding:14px 16px;max-width:520px}
 .link{font-size:13px;color:var(--mu);word-break:break-all}
+.qbar{max-width:728px;margin:16px auto 0;padding:10px 16px;border-radius:12px;background:#FFF1A8;color:#5A4500;font-weight:700;font-size:15px;text-align:center}
+@media (max-width:760px){.qbar{margin:16px 16px 0}}
 </style>
 </head><body>
 <header class="fhead"><div class="wrap"><span class="logo"><b>NovacPay</b><small>для личных платежей</small></span><span class="mode" id="mode">Сотрудник в зале</span></div></header>
+<p class="qbar" id="queue" role="status" hidden></p>
 <div class="fbox">
   <form class="card" id="f" novalidate>
     <div><h1>Анкета гостя</h1><p class="intro" id="intro">30 секунд. После отправки появится QR в бот: гость сканирует его своим телефоном.</p></div>
@@ -117,6 +120,45 @@ details.opt .chips,details.opt .xq{margin-top:12px}
   sync();
   function vals(n){ return [].slice.call(document.querySelectorAll('input[name=' + n + ']:checked')).map(function(c){ return c.value; }); }
 
+  /* Очередь отправки: анкета сначала сохраняется на устройстве, а удаляется из очереди только
+     после того, как запрос ушёл в Google. Без связи анкеты ждут и уходят сами, когда сеть вернётся. */
+  var QKEY = 'cbf26_queue', sending = false;
+  function readQ(){ try { return JSON.parse(localStorage.getItem(QKEY) || '[]'); } catch (e) { return null; } }
+  function writeQ(q){ try { localStorage.setItem(QKEY, JSON.stringify(q)); return true; } catch (e) { return false; } }
+  function post(data){
+    var ctl = window.AbortController ? new AbortController() : null;
+    var t = setTimeout(function(){ if (ctl) ctl.abort(); }, 15000);
+    return fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data), signal: ctl ? ctl.signal : undefined }).then(function(){ clearTimeout(t); }, function(e){ clearTimeout(t); throw e; });
+  }
+  function showQ(){
+    var q = readQ() || [], el = $('queue');
+    el.hidden = !q.length;
+    el.textContent = 'Не отправлено: ' + q.length + ' · уйдут, когда появится связь';
+  }
+  function flush(){
+    if (!FORM_ENDPOINT || sending) return;
+    var q = readQ();
+    if (!q || !q.length) { showQ(); return; }
+    sending = true;
+    post(q[0]).then(function(){
+      var cur = readQ() || [];
+      writeQ(cur.filter(function(x){ return x.id !== q[0].id; }));
+      sending = false; showQ(); flush();
+    }, function(){ sending = false; showQ(); });
+  }
+  function enqueue(data){
+    if (!FORM_ENDPOINT) return;
+    data.id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    var q = readQ();
+    if (q && writeQ(q.concat([data]))) { showQ(); flush(); }
+    else { post(data).catch(function(){}); }  /* хранилище недоступно: отправляем как раньше */
+  }
+  window.addEventListener('online', flush);
+  setInterval(flush, 20000);
+  flush();
+  if ('serviceWorker' in navigator) { try { navigator.serviceWorker.register('sw.js'); } catch (e) {} }
+
   $('f').addEventListener('submit', function(e){
     e.preventDefault();
     var name = $('name').value.trim(), contact = $('contact').value.trim(), who = (document.querySelector('input[name=who]:checked') || {}).value || '';
@@ -131,9 +173,7 @@ details.opt .chips,details.opt .xq{margin-top:12px}
     var data = { time: new Date().toISOString(), source: tag, name: name, contact: contact, who: who,
       interests: interests.join(', '), features: vals('ft').join(', '),
       china_amount: $('x1').value, china_now: $('x2').value, china_fee: $('x3').value };
-    if (FORM_ENDPOINT) {
-      try { fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) }); } catch (err) {}
-    }
+    enqueue(data);
     var url = BOT + tag;
     $('f').hidden = true; $('done').hidden = false;
     $('doneH').textContent = name + ', откройте бот NovacPay';
