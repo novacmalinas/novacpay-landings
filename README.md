@@ -1,5 +1,9 @@
 # Посадочные страницы NovacPay (B2C) — China Business Forum
 
+> **Архив.** С 13.11.2026 страницы живут на https://novacpay.pro/chinabusinessforum/ —
+> репозиторий edgarvir/novacpay-b2c-landing, папка `site/chinabusinessforum/` (PR #22).
+> Правки вносить там. GitHub Pages этого репозитория выключен.
+
 Статичные страницы, без сборки. Вся папка `chinabusinessforum/` копируется как есть
 в корень сайта novacpay.pro, адреса получаются такие:
 
