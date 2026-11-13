@@ -12,6 +12,17 @@
 | `/chinabusinessforum/referral/` | `lp_referral` |
 | `/chinabusinessforum/team/` | `lp_team` |
 
+Служебные страницы для стенда (закрыты от поиска навсегда, ссылок на них с сайта нет):
+
+| Адрес | Что это | Метка в QR |
+|---|---|---|
+| `/chinabusinessforum/stand/` | посадочная для планшета на стенде | — |
+| `/chinabusinessforum/form/#stand` | анкета, режим «Стенд · планшет» | `cbf26_stand` |
+| `/chinabusinessforum/form/` | анкета, режим «Сотрудник в зале» | `cbf26_manager` |
+
+Анкеты уходят в Google-таблицу через веб-приложение Apps Script (код в `apps-script.gs`,
+его на сервер не копировать). Адрес веб-приложения стоит в `form/index.html`, в `FORM_ENDPOINT`.
+
 Пока страницы на согласовании, они доступны через GitHub Pages этого репозитория
 по тем же путям.
 

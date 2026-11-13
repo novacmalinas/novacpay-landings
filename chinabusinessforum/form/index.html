@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Анкета NovacPay</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<link rel="stylesheet" href="../style.css">
+<style>
+/* Form tool: navy header strip, white card, big touch targets for a tablet or a phone held by staff. */
+body{background:var(--bg)}
+.fhead{background:radial-gradient(90% 140% at 100% 100%,rgba(242,107,33,.5) 0,transparent 60%),var(--navy);color:#fff}
+.fhead .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:16px}
+.mode{font-size:13px;font-weight:700;border-radius:999px;padding:6px 12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25)}
+.fbox{max-width:760px;margin:24px auto 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.card{background:#fff;border:1px solid var(--ln);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:22px;box-shadow:0 20px 50px -36px rgba(10,20,51,.5)}
+.card h1{margin:0;font-size:clamp(24px,4vw,32px);letter-spacing:-.02em;line-height:1.1}
+.card .intro{margin:6px 0 0;color:var(--mu)}
+.f{display:flex;flex-direction:column;gap:8px}
+.f>span,.legend{font-weight:700;font-size:15px}
+.legend small{font-weight:500;color:var(--mu)}
+input[type=text],input[type=tel]{font:inherit;font-size:17px;padding:14px 16px;border:1px solid var(--ln);border-radius:12px;background:#fff;color:var(--ink);min-height:54px;width:100%}
+input[type=text]:focus,input[type=tel]:focus{outline:none;border-color:var(--or);box-shadow:0 0 0 3px rgba(242,107,33,.2)}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips label{position:relative}
+.chips input{position:absolute;opacity:0;inset:0;width:100%;height:100%;margin:0;cursor:pointer}
+.chips span{display:inline-flex;align-items:center;min-height:48px;padding:10px 14px;border:1px solid var(--ln);border-radius:12px;background:#fff;font-size:15px;font-weight:600;transition:background .12s,border-color .12s}
+.chips input:checked+span{background:var(--navy);border-color:var(--navy);color:#fff}
+.chips input:focus-visible+span{outline:3px solid var(--or2);outline-offset:2px}
+.chips.b2b input:checked+span{background:var(--or);border-color:var(--or)}
+details.opt{border:1px dashed var(--ln);border-radius:14px;padding:14px 16px}
+details.opt summary{cursor:pointer;font-weight:700;list-style:none;display:flex;justify-content:space-between;gap:10px}
+details.opt summary::after{content:"+";color:var(--or);font-weight:800}
+details.opt[open] summary::after{content:"−"}
+details.opt .chips,details.opt .xq{margin-top:12px}
+.xq{display:grid;gap:10px}
+.consent{display:grid;grid-template-columns:24px 1fr;gap:10px;font-size:14px;color:var(--mu);align-items:start}
+.consent input{width:20px;height:20px;accent-color:var(--or);margin-top:2px}
+.err{color:#C8202F;font-weight:600;font-size:15px;margin:0}
+.done{display:flex;flex-direction:column;align-items:center;text-align:center;gap:16px}
+.done h1{font-size:clamp(24px,4vw,30px)}
+#qr{background:#fff;padding:16px;border-radius:18px;border:1px solid var(--ln)}
+#qr img,#qr canvas{display:block;width:260px;height:260px}
+.prize{background:#FFF6EF;border:1px solid #FFD9BF;border-radius:14px;padding:14px 16px;font-weight:600;max-width:520px}
+.bizalert{background:var(--navy);color:#fff;border-radius:14px;padding:14px 16px;max-width:520px}
+.link{font-size:13px;color:var(--mu);word-break:break-all}
+</style>
+</head><body>
+<header class="fhead"><div class="wrap"><span class="logo"><b>NovacPay</b><small>для личных платежей</small></span><span class="mode" id="mode">Сотрудник в зале</span></div></header>
+<div class="fbox">
+  <form class="card" id="f" novalidate>
+    <div><h1>Анкета гостя</h1><p class="intro" id="intro">30 секунд. После отправки появится QR в бот: гость сканирует его своим телефоном.</p></div>
+    <label class="f" for="name"><span>Имя</span><input type="text" id="name" autocomplete="off" placeholder="Анна"></label>
+    <label class="f" for="contact"><span>Telegram или телефон</span><input type="text" id="contact" autocomplete="off" placeholder="@username или +7…"></label>
+    <fieldset><span class="legend">Кто вы</span><div class="chips">
+      <label><input type="radio" name="who" value="Частное лицо"><span>Частное лицо</span></label>
+      <label><input type="radio" name="who" value="Предприниматель"><span>Предприниматель</span></label>
+      <label><input type="radio" name="who" value="Турагент, гид, блогер"><span>Турагент · гид · блогер</span></label>
+      <label><input type="radio" name="who" value="Компания платит поставщикам"><span>Компания платит поставщикам</span></label>
+    </div></fieldset>
+    <fieldset><span class="legend">Что интересно <small>· можно несколько</small></span><div class="chips">
+      <label><input type="checkbox" name="i" value="Карта для поездок"><span>Карта для поездок и Китая</span></label>
+      <label><input type="checkbox" name="i" value="Карта для сервисов"><span>Карта для сервисов и подписок</span></label>
+      <label><input type="checkbox" name="i" value="Оплата счетов"><span>Оплата счетов за рубежом</span></label>
+      <label><input type="checkbox" name="i" value="Партнёрка"><span>Стать партнёром</span></label>
+      <label><input type="checkbox" name="i" value="Рефералка"><span>Пригласить друзей</span></label>
+      <label><input type="checkbox" name="i" value="Карта для команды"><span>Карта для команды</span></label>
+      <label><input type="checkbox" name="i" value="Переводы в Китай"><span>Переводы в Китай</span></label>
+    </div><div class="chips b2b"><label><input type="checkbox" name="i" value="B2B"><span>Платежи поставщикам от $5 000 (для бизнеса)</span></label></div></fieldset>
+    <details class="opt" id="feat"><summary>Какие функции важны · необязательно</summary><div class="chips">
+      <label><input type="checkbox" name="ft" value="Alipay и WeChat"><span>Alipay и WeChat</span></label>
+      <label><input type="checkbox" name="ft" value="Apple Pay и Google Pay"><span>Apple Pay и Google Pay</span></label>
+      <label><input type="checkbox" name="ft" value="ИИ-сервисы"><span>ИИ-сервисы</span></label>
+      <label><input type="checkbox" name="ft" value="Бронирования"><span>Бронирования и Trip.com</span></label>
+      <label><input type="checkbox" name="ft" value="Кешбэк"><span>Кешбэк</span></label>
+      <label><input type="checkbox" name="ft" value="Несколько карт"><span>Несколько карт</span></label>
+    </div></details>
+    <details class="opt" id="xblock" hidden open><summary>Переводы в Китай · 3 вопроса</summary><div class="xq">
+      <label class="f" for="x1"><span>Сумма и частота</span><input type="text" id="x1" placeholder="например, 300 000 ₽ в месяц"></label>
+      <label class="f" for="x2"><span>Как платите сейчас</span><input type="text" id="x2" placeholder="банк, карго, знакомые"></label>
+      <label class="f" for="x3"><span>Какая комиссия приемлема</span><input type="text" id="x3" placeholder="%"></label>
+    </div></details>
+    <label class="consent" for="ok"><input type="checkbox" id="ok"><span>Согласен на обработку персональных данных и сообщения от NovacPay. <a href="#" id="policy">Политика конфиденциальности</a></span></label>
+    <p class="err" id="err" hidden></p>
+    <button class="btn or" type="submit" style="min-height:56px;font-size:17px">Отправить и показать QR</button>
+  </form>
+
+  <div class="card done" id="done" hidden>
+    <span class="mode" style="background:#FFF0E6;color:#B4481A;border-color:#FFD9BF">Отсканируйте камерой своего телефона</span>
+    <h1 id="doneH">Откройте бот NovacPay</h1>
+    <div id="qr" aria-label="QR-код на бот NovacPay"></div>
+    <p class="link" id="qrUrl"></p>
+    <div class="prize" id="prize">Гость участвует в розыгрыше: на стенде NovacPay он вытягивает красный конверт с призом. За выпуск Premium — пауэрбанк, за Online — картхолдер.</div>
+    <div class="bizalert" id="b2b" hidden>Гость из бизнеса: подведите его к столу NovacPay для бизнеса в течение 5 минут. Если коллега занят, анкета уже ушла в вечерний разбор.</div>
+    <button class="btn navy" type="button" id="again">Новая анкета</button>
+  </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+(function(){
+  /* Настройки для публикации: адрес приёма анкет (Google Apps Script → Google Таблица) и ссылка на политику. */
+  var FORM_ENDPOINT = '';
+  var POLICY_URL = 'https://novacpay.pro/legal/privacy.html';
+  var BOT = 'https://telegram.me/NovacPayCards_bot?start=';
+
+  var stand = location.hash === '#stand' || /[?&]mode=stand/.test(location.search);
+  var $ = function(id){ return document.getElementById(id); };
+  if (POLICY_URL) { $('policy').href = POLICY_URL; $('policy').target = '_blank'; } else { $('policy').hidden = true; }
+  if (stand) {
+    $('mode').textContent = 'Стенд · планшет';
+    $('intro').textContent = 'Заполните вместе с гостем. После отправки появится QR в бот.';
+    $('feat').open = true;
+  }
+  function sync(){ $('xblock').hidden = !document.querySelector('input[name=i][value="Переводы в Китай"]').checked; }
+  document.querySelectorAll('input[name=i]').forEach(function(c){ c.addEventListener('change', sync); });
+  document.querySelectorAll('input[name=who]').forEach(function(r){ r.addEventListener('change', function(){ if (r.value === 'Компания платит поставщикам' && r.checked) document.querySelector('input[name=i][value=B2B]').checked = true; }); });
+  sync();
+  function vals(n){ return [].slice.call(document.querySelectorAll('input[name=' + n + ']:checked')).map(function(c){ return c.value; }); }
+
+  $('f').addEventListener('submit', function(e){
+    e.preventDefault();
+    var name = $('name').value.trim(), contact = $('contact').value.trim(), who = (document.querySelector('input[name=who]:checked') || {}).value || '';
+    var interests = vals('i'), msg = '';
+    if (!name) msg = 'Введите имя гостя.';
+    else if (!contact) msg = 'Нужен Telegram или телефон, иначе не сможем написать после форума.';
+    else if (!interests.length) msg = 'Отметьте хотя бы один интерес.';
+    else if (!$('ok').checked) msg = 'Без согласия анкету отправить нельзя: отметьте согласие.';
+    $('err').hidden = !msg; $('err').textContent = msg; if (msg) return;
+
+    var tag = stand ? 'cbf26_stand' : 'cbf26_manager';
+    var data = { time: new Date().toISOString(), source: tag, name: name, contact: contact, who: who,
+      interests: interests.join(', '), features: vals('ft').join(', '),
+      china_amount: $('x1').value, china_now: $('x2').value, china_fee: $('x3').value };
+    if (FORM_ENDPOINT) {
+      try { fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) }); } catch (err) {}
+    }
+    var url = BOT + tag;
+    $('f').hidden = true; $('done').hidden = false;
+    $('doneH').textContent = name + ', откройте бот NovacPay';
+    $('qrUrl').textContent = url;
+    $('qr').innerHTML = '';
+    try { new QRCode($('qr'), { text: url, width: 260, height: 260, colorDark: '#0A1433', colorLight: '#ffffff' }); } catch (err) { $('qr').textContent = url; }
+    $('b2b').hidden = interests.indexOf('B2B') < 0;
+    window.scrollTo(0, 0);
+  });
+  $('again').addEventListener('click', function(){ $('f').reset(); sync(); if (stand) $('feat').open = true; $('done').hidden = true; $('f').hidden = false; $('name').focus(); });
+})();
+</script>
+</body></html>
